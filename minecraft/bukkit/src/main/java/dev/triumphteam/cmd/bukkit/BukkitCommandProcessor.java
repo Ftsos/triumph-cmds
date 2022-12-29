@@ -88,6 +88,14 @@ final class BukkitCommandProcessor<S> extends AbstractCommandProcessor<CommandSe
         return new BukkitSubCommand<>(processor, getName(), executionProvider);
     }
 
+    protected @NotNull BukkitSubCommand<S> createSubCommand(
+            final @NotNull BukkitSubCommandProcessor<S> processor,
+            final @NotNull ExecutionProvider executionProvider,
+            final @NotNull Object parentObject
+    ) {
+        return new BukkitSubCommand<>(processor, getName(), executionProvider, parentObject);
+    }
+
     static CommandPermission createPermission(
             final @Nullable CommandPermission parent,
             final @NotNull List<@NotNull String> nodes,

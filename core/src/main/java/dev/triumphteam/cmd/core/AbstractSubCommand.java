@@ -59,6 +59,7 @@ public abstract class AbstractSubCommand<S> implements SubCommand<S> {
     private final BaseCommand baseCommand;
     private final Method method;
 
+    private final Object parentObject;
     private final String parentName;
     private final String name;
     private final List<String> alias;
@@ -80,10 +81,38 @@ public abstract class AbstractSubCommand<S> implements SubCommand<S> {
     public AbstractSubCommand(
             final @NotNull AbstractSubCommandProcessor<S> processor,
             final @NotNull String parentName,
+            final @NotNull ExecutionProvider executionProvider,
+            final @NotNull Object parentObject
+    ) {
+        this.baseCommand = processor.getBaseCommand();
+        this.method = processor.getMethod();
+        this.parentObject = parentObject;
+        this.name = processor.getName();
+        this.alias = processor.getAlias();
+        this.internalArguments = processor.getArguments();
+        this.requirements = processor.getRequirements();
+        this.messageRegistry = processor.getMessageRegistry();
+        this.isDefault = processor.isDefault();
+        this.senderValidator = processor.getSenderValidator();
+
+        this.senderType = processor.getSenderType();
+
+        this.parentName = parentName;
+
+        this.executionProvider = executionProvider;
+
+        this.hasArguments = !internalArguments.isEmpty();
+        this.containsLimitless = internalArguments.stream().anyMatch(LimitlessInternalArgument.class::isInstance);
+    }
+
+    public AbstractSubCommand(
+            final @NotNull AbstractSubCommandProcessor<S> processor,
+            final @NotNull String parentName,
             final @NotNull ExecutionProvider executionProvider
     ) {
         this.baseCommand = processor.getBaseCommand();
         this.method = processor.getMethod();
+        this.parentObject = processor.getBaseCommand();
         this.name = processor.getName();
         this.alias = processor.getAlias();
         this.internalArguments = processor.getArguments();
@@ -179,7 +208,7 @@ public abstract class AbstractSubCommand<S> implements SubCommand<S> {
 
         executionProvider.execute(() -> {
             try {
-                method.invoke(baseCommand, invokeArguments.toArray());
+                method.invoke(parentObject, invokeArguments.toArray());
             } catch (IllegalAccessException | InvocationTargetException exception) {
                 throw new CommandExecutionException("An error occurred while executing the command", parentName, name)
                         .initCause(exception instanceof InvocationTargetException ? exception.getCause() : exception);

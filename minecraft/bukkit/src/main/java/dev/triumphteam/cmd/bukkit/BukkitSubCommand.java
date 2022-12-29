@@ -46,6 +46,13 @@ public final class BukkitSubCommand<S> extends AbstractSubCommand<S> {
         if (this.permission != null) this.permission.register();
     }
 
+    public BukkitSubCommand(final @NotNull BukkitSubCommandProcessor<S> processor, final @NotNull String parentName, final @NotNull ExecutionProvider executionProvider, final @NotNull Object parentObject) {
+        super(processor, parentName, executionProvider, parentObject);
+        this.permission = processor.getPermission();
+
+        if (this.permission != null) this.permission.register();
+    }
+
     public @NotNull List<@NotNull String> getSuggestions(final @NotNull S sender, final @NotNull List<@NotNull String> args) {
         final int index = args.size() - 1;
         final InternalArgument<S, ?> internalArgument = getArgument(index);
