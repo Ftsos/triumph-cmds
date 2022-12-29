@@ -39,3 +39,7 @@ The source code can be found [**here**](https://github.com/TriumphTeam/triumph-c
 ## Other
 
 Join my [**discord**](https://mattstudios.me/discord) server if you need help!  
+
+## This Fork
+
+This fork is basically a modified version of the lib to allow suttle changes that with reflection code allow you to register subcommands for more classes, if you want to see the changes to this project right now this is the [commit](https://github.com/Ftsos/triumph-cmds/commit/43a7d6b6ae5f1de5baf597a6e00214c6be4103df) 
